@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>운영 데이터 입력 — 연세리더스</title>
+<style>
+@font-face { font-family: 'Paperozi'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Paperozi'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6SemiBold.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Paperozi'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2'); font-weight: 800; font-display: swap; }
+@font-face { font-family: 'Paperozi'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-9Black.woff2') format('woff2'); font-weight: 900; font-display: swap; }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --green: #2EAF6F; --green-dark: #1A3A28; --green-light: #5EE89A;
+  --green-bg: #C6F0D8; --green-pale: #F4FAF7;
+  --orange: #FF7043; --orange-dark: #C44A00; --orange-pale: #FFFCF8;
+  --gray: #E8E8E8; --text-dark: #1A3A28; --text-mid: #4A7A60; --text-light: #8AB89A;
+}
+body { font-family: 'Paperozi', 'Noto Sans KR', sans-serif; background: #E8E8E8; color: var(--text-dark); min-height: 100vh; }
+
+.site-header {
+  background: linear-gradient(135deg, var(--green-dark) 0%, #0D2018 100%);
+  padding: 24px 40px; display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 4px solid var(--green);
+}
+.logo { display: flex; align-items: center; gap: 14px; }
+.logo-icon { width: 44px; height: 44px; background: var(--green); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+.logo-text h1 { font-size: 20px; font-weight: 900; color: #fff; }
+.logo-text p { font-size: 11px; font-weight: 300; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+.main { max-width: 1100px; margin: 0 auto; padding: 32px 40px; }
+
+.card { background: #fff; border-radius: 20px; padding: 28px; box-shadow: 0 4px 24px rgba(0,0,0,0.07); margin-bottom: 20px; }
+.card-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.card-grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+
+.section-head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.badge { display: inline-flex; align-items: center; background: var(--green); color: #fff; font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 20px; }
+.badge.orange { background: var(--orange); }
+.section-head h2 { font-size: 18px; font-weight: 900; }
+.section-head p { font-size: 12px; color: var(--text-mid); margin-top: 2px; }
+
+.staff-block { background: var(--green-pale); border-radius: 16px; padding: 20px; border: 1.5px solid #C6E8D4; margin-bottom: 14px; }
+.staff-block.orange-block { background: var(--orange-pale); border-color: #FFD5C0; }
+.staff-block-title { font-size: 15px; font-weight: 800; color: var(--green-dark); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.staff-block.orange-block .staff-block-title { color: #2A1A10; }
+.rate-badge { font-size: 11px; font-weight: 600; background: var(--green-bg); color: var(--green-dark); padding: 3px 10px; border-radius: 10px; }
+.rate-badge.orange { background: #FFE0C8; color: var(--orange-dark); }
+
+.input-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.input-group label { display: block; font-size: 11px; font-weight: 600; color: var(--text-mid); margin-bottom: 5px; }
+.input-group input {
+  width: 100%; padding: 9px 12px;
+  background: #fff; border: 1.5px solid #C6E8D4; border-radius: 9px;
+  font-family: inherit; font-size: 14px; font-weight: 400; color: var(--green-dark);
+  outline: none; transition: border-color 0.2s;
+}
+.input-group input:focus { border-color: var(--green); }
+.input-group input.orange-input { background: var(--orange-pale); border-color: #FFD5C0; }
+.input-group input.orange-input:focus { border-color: var(--orange); background: #fff; }
+
+.preview-amt { margin-top: 10px; font-size: 14px; font-weight: 800; color: var(--green); }
+.preview-amt.orange { color: var(--orange); }
+
+.notice-box { background: #FFF3EE; border: 1.5px solid #FFCBA4; border-radius: 12px; padding: 13px 18px; display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px; }
+.notice-box p { font-size: 13px; font-weight: 300; color: #7A4A30; }
+.notice-box strong { font-weight: 800; color: var(--orange-dark); }
+
+.btn-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 28px 0; }
+.btn-calc { display: inline-flex; align-items: center; gap: 8px; background: var(--green); color: #fff; font-family: inherit; font-size: 14px; font-weight: 800; padding: 13px 28px; border-radius: 12px; border: none; cursor: pointer; transition: background 0.2s; }
+.btn-calc:hover { background: #1A8A50; }
+.btn-save { display: inline-flex; align-items: center; gap: 8px; background: var(--green-dark); color: #fff; font-family: inherit; font-size: 14px; font-weight: 800; padding: 13px 28px; border-radius: 12px; border: none; cursor: pointer; transition: background 0.2s; }
+.btn-save:hover { background: #0D2018; }
+.btn-load { display: inline-flex; align-items: center; gap: 6px; background: #fff; color: var(--text-mid); font-family: inherit; font-size: 13px; font-weight: 600; padding: 10px 18px; border-radius: 10px; border: 1.5px solid #C6E8D4; cursor: pointer; transition: border-color 0.2s; }
+.btn-load:hover { border-color: var(--green); color: var(--green-dark); }
+
+.save-status { font-size: 13px; font-weight: 600; }
+.save-status.ok { color: var(--green); }
+.save-status.err { color: var(--orange); }
+
+.result-table { width: 100%; border-collapse: collapse; }
+.result-table th { background: var(--green-dark); color: #fff; font-size: 12px; font-weight: 800; padding: 11px 14px; text-align: center; }
+.result-table th:first-child { border-radius: 10px 0 0 0; }
+.result-table th:last-child { border-radius: 0 10px 0 0; }
+.result-table td { padding: 10px 14px; text-align: center; font-size: 13px; border-bottom: 1px solid #EEF5F1; }
+.result-table tr:hover td { background: var(--green-pale); }
+.result-table .total-row td { background: #EFF8F3; font-weight: 800; color: var(--green-dark); border-top: 2px solid var(--green); }
+.result-table .amount { font-weight: 800; color: var(--green); }
+.result-table .amount.orange { color: var(--orange); }
+.rate-badge-sm { display: inline-block; background: var(--green-bg); color: var(--green-dark); font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 8px; }
+
+::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f0f0f0; } ::-webkit-scrollbar-thumb { background: #C6E8D4; border-radius: 3px; }
+
+@media (max-width: 900px) { .main { padding: 20px; } .card-grid-2, .card-grid-4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .card-grid-2, .card-grid-4 { grid-template-columns: 1fr; } .main { padding: 14px; } .site-header { padding: 18px 20px; } }
+
+/* ── PT 주차 선택 버튼 ── */
+.pt-wk-btn { padding:7px 18px; border-radius:20px; border:1.5px solid #C6E8D4; background:#fff; color:var(--text-mid); font-family:'Paperozi',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; }
+.pt-wk-btn.active { background:var(--green); color:#fff; border-color:var(--green); }
+.pt-wk-btn:hover:not(.active) { border-color:var(--green); color:var(--green-dark); }
+
+/* ── 연차/OFF 신청 ── */
+.input-tab-nav { background: var(--green-dark); padding: 0 40px; display: flex; gap: 4px; overflow-x: auto; }
+.input-tab-btn { padding: 12px 22px; background: transparent; border: none; border-bottom: 3px solid transparent; color: rgba(255,255,255,0.5); font-family: 'Paperozi', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+.input-tab-btn:hover { color: rgba(255,255,255,0.8); }
+.input-tab-btn.active { color: var(--green-light); border-bottom-color: var(--green-light); }
+.input-tab-panel { display: none; }
+.input-tab-panel.active { display: block; }
+.divider { height: 1px; background: #E0EDE6; margin: 28px 0; }
+.select-input { width: 100%; padding: 9px 12px; background: #fff; border: 1.5px solid #C6E8D4; border-radius: 9px; font-family: inherit; font-size: 14px; color: var(--green-dark); outline: none; transition: border-color 0.2s; cursor: pointer; }
+.select-input:focus { border-color: var(--green); }
+.btn-annual { display: inline-flex; align-items: center; gap: 7px; background: #5B4FCF; color: #fff; font-family: inherit; font-size: 14px; font-weight: 800; padding: 11px 22px; border-radius: 11px; border: none; cursor: pointer; transition: background 0.2s; }
+.btn-annual:hover { background: #4A3EBB; }
+.btn-off-lv { display: inline-flex; align-items: center; gap: 7px; background: #1E88E5; color: #fff; font-family: inherit; font-size: 14px; font-weight: 800; padding: 11px 22px; border-radius: 11px; border: none; cursor: pointer; transition: background 0.2s; }
+.btn-off-lv:hover { background: #1565C0; }
+.leave-tag-lv { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 800; }
+.leave-tag-lv.annual { background: #EDE7FF; color: #5B4FCF; }
+.leave-tag-lv.off { background: #E3F2FD; color: #1E88E5; }
+.leave-item { display: flex; align-items: center; gap: 12px; padding: 11px 14px; background: #F8F8F8; border-radius: 11px; margin-bottom: 8px; flex-wrap: wrap; }
+.leave-item-date { font-size: 14px; font-weight: 800; color: var(--text-dark); min-width: 120px; }
+.btn-del-leave { background: #FFE0E0; color: #C00; border: none; border-radius: 8px; padding: 4px 11px; font-size: 12px; font-weight: 800; cursor: pointer; font-family: inherit; }
+.btn-del-leave:hover { background: #FFBBBB; }
+/* 숫자 스피너 제거 */
+#dr-input-table input[type=number]::-webkit-inner-spin-button,
+#dr-input-table input[type=number]::-webkit-outer-spin-button,
+#pt-blocks input[type=number]::-webkit-inner-spin-button,
+#pt-blocks input[type=number]::-webkit-outer-spin-button,
+#carm-daily-wrap input[type=number]::-webkit-inner-spin-button,
+#carm-daily-wrap input[type=number]::-webkit-outer-spin-button,
+#nurse-daily-wrap input[type=number]::-webkit-inner-spin-button,
+#nurse-daily-wrap input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
+#dr-input-table input[type=number],
+#pt-blocks input[type=number],
+#carm-daily-wrap input[type=number],
+#nurse-daily-wrap input[type=number] { -moz-appearance:textfield; }
+/* 고정 헤더 */
+#dr-input-table thead th { position:sticky; top:0; z-index:2; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo">
+    <div class="logo-icon">📋</div>
+    <div class="logo-text">
+      <h1>운영 데이터 입력</h1>
+      <p>인센티브 · 일별수입 · 연차/OFF 입력 센터</p>
+    </div>
+  </div>
+</header>
+
+<nav class="input-tab-nav">
+  <button class="input-tab-btn active" onclick="switchInputTab('insen', this)">💰 인센티브 입력</button>
+  <button class="input-tab-btn" onclick="switchInputTab('daily-rev-inp', this)">💹 일별수입 입력</button>
+  <button class="input-tab-btn" onclick="switchInputTab('leave-inp', this)">📅 연차·OFF 신청</button>
+  <button class="input-tab-btn" onclick="switchInputTab('review-inp', this)">🏥 간호 리뷰 입력</button>
+  <button class="input-tab-btn" onclick="switchInputTab('attend-inp', this)">🕐 출퇴근 입력</button>
+</nav>
+
+<main class="main">
+
+<div id="insen-tab" class="input-tab-panel active">
+
+  <!-- 연월 + 매출 -->
+  <div class="card">
+    <div style="display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;">
+      <div class="input-group" style="width:auto;">
+        <label>대상 연월</label>
+        <input type="month" id="input-month" style="width:180px;" onchange="onMonthChange()">
+      </div>
+      <button class="btn-load" onclick="loadPrevious()">📂 이전 입력 불러오기</button>
+    </div>
+  </div>
+
+  <!-- PT 치료사 입력 -->
+  <div class="section-head" style="margin-bottom:12px;">
+    <span class="badge">PT</span>
+    <div><h2>PT 치료사 건수 입력</h2><p>각 코드별 시술 건수 입력</p></div>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:12px;">
+    <button class="pt-wk-btn active" onclick="selectPtWeek(1)">1주차</button>
+    <button class="pt-wk-btn" onclick="selectPtWeek(2)">2주차</button>
+    <button class="pt-wk-btn" onclick="selectPtWeek(3)">3주차</button>
+    <button class="pt-wk-btn" onclick="selectPtWeek(4)">4주차</button>
+  </div>
+  <div id="pt-blocks"></div>
+
+  <!-- C-arm 입력 -->
+  <div class="section-head" style="margin-top:8px;margin-bottom:12px;">
+    <span class="badge orange">C-arm</span>
+    <div><h2>C-arm 방사선사 건수</h2><p>일별 촬영 건수 입력</p></div>
+  </div>
+  <div id="carm-daily-wrap"></div>
+
+  <!-- 간호 입력 -->
+  <div class="section-head" style="margin-bottom:12px;">
+    <span class="badge orange">간호</span>
+    <div><h2>간호 인센 건수 입력</h2><p>일별 간호 건수 입력</p></div>
+  </div>
+  <div id="nurse-daily-wrap"></div>
+
+  <!-- 버튼 -->
+  <div class="btn-row">
+    <button class="btn-save" onclick="saveToStorage()">💾 저장 · 대시보드 반영</button>
+    <span id="save-status" class="save-status"></span>
+  </div>
+
+</div><!-- /insen-tab -->
+
+<div id="daily-rev-inp-tab" class="input-tab-panel">
+
+  <div class="section-head" style="margin-bottom:12px;">
+    <span class="badge" style="background:#1565C0;">💹</span>
+    <div>
+      <h2>일별 수입 입력</h2>
+      <p>일일정산 형식 · 의보/자보/시제/통장/리뷰이벤트 입력 · 저장 후 대시보드에 반영됩니다</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px;">
+    <div style="display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;">
+      <div class="input-group" style="width:auto;">
+        <label>대상 연월</label>
+        <input type="month" id="dr-input-month" style="width:175px;" onchange="onDrMonthChange()">
+      </div>
+      <button class="btn-load" onclick="loadDrPrevious()">📂 저장 데이터 불러오기</button>
+      <button class="btn-annual" onclick="addDrRow()">➕ 행 추가</button>
+      <button class="btn-save" onclick="saveDrData()" style="margin-left:0;padding:11px 22px;font-size:14px;">💾 저장 · 대시보드 반영</button>
+      <span id="dr-save-status" class="save-status"></span>
+    </div>
+  </div>
+
+  <!-- 일일정산 형식 입력표 -->
+  <div style="background:#fff;border-radius:16px;padding:14px 18px 18px;box-shadow:0 4px 24px rgba(0,0,0,0.07);overflow-x:auto;">
+    <table id="dr-input-table" style="border-collapse:collapse;font-size:12px;font-family:'Paperozi','Noto Sans KR',sans-serif;width:100%;">
+      <colgroup>
+        <col style="min-width:110px;">
+        <col style="min-width:78px;"><col style="min-width:92px;">
+        <col style="min-width:66px;"><col style="min-width:66px;">
+        <col style="min-width:66px;"><col style="min-width:66px;">
+        <col style="min-width:64px;"><col style="min-width:64px;">
+        <col style="min-width:50px;">
+        <col style="min-width:46px;"><col style="min-width:46px;"><col style="min-width:46px;"><col style="min-width:46px;">
+        <col style="min-width:86px;">
+        <col style="min-width:34px;">
+      </colgroup>
+      <thead>
+        <tr>
+          <th rowspan="2" style="background:#2E4057;color:#fff;border:1px solid #4A6080;padding:7px 5px;text-align:center;font-weight:800;font-size:12px;vertical-align:middle;">일 자</th>
+          <th colspan="2" style="background:#2E4057;color:#fff;border:1px solid #4A6080;padding:5px 6px;text-align:center;font-weight:800;font-size:12px;">의  보</th>
+          <th colspan="2" style="background:#2E4057;color:#fff;border:1px solid #4A6080;padding:5px 6px;text-align:center;font-weight:800;font-size:12px;">자  보</th>
+          <th rowspan="2" style="background:#2E4057;color:#fff;border:1px solid #4A6080;padding:7px 4px;text-align:center;font-weight:800;font-size:12px;vertical-align:middle;">시  제</th>
+          <th rowspan="2" style="background:#2E4057;color:#fff;border:1px solid #4A6080;padding:7px 4px;text-align:center;font-weight:800;font-size:12px;vertical-align:middle;">통  장</th>
+          <th rowspan="2" style="background:#2E4057;color:#fff;border:1px solid #4A6080;padding:7px 4px;text-align:center;font-weight:800;font-size:12px;vertical-align:middle;">기타수입</th>
+          <th rowspan="2" style="background:#7B2A00;color:#fff;border:1px solid #C44A00;padding:7px 4px;text-align:center;font-weight:800;font-size:12px;vertical-align:middle;">지출금액</th>
+          <th rowspan="2" style="background:#2E4057;color:#fff;border:1px solid #4A6080;padding:7px 4px;text-align:center;font-weight:800;font-size:12px;vertical-align:middle;">진료수</th>
+          <th colspan="4" style="background:#4A235A;color:#fff;border:1px solid #7B1FA2;padding:5px 6px;text-align:center;font-weight:800;font-size:12px;">리뷰 이벤트</th>
+          <th rowspan="2" style="background:#0D47A1;color:#fff;border:1px solid #1565C0;padding:7px 4px;text-align:center;font-weight:800;font-size:12px;vertical-align:middle;">일계✦</th>
+          <th rowspan="2" style="background:#444;color:#fff;border:1px solid #666;padding:7px 3px;text-align:center;font-weight:800;font-size:11px;vertical-align:middle;">삭제</th>
+        </tr>
+        <tr>
+          <th style="background:#3D5270;color:#E8F0FE;border:1px solid #4A6080;padding:4px 5px;text-align:center;font-weight:700;font-size:11px;">현금</th>
+          <th style="background:#3D5270;color:#90CAF9;border:1px solid #4A6080;padding:4px 5px;text-align:center;font-weight:700;font-size:11px;">카드</th>
+          <th style="background:#3D5270;color:#E8F0FE;border:1px solid #4A6080;padding:4px 5px;text-align:center;font-weight:700;font-size:11px;">현금</th>
+          <th style="background:#3D5270;color:#90CAF9;border:1px solid #4A6080;padding:4px 5px;text-align:center;font-weight:700;font-size:11px;">카드</th>
+          <th style="background:#6A1B9A;color:#F3E5F5;border:1px solid #7B1FA2;padding:4px 3px;text-align:center;font-weight:700;font-size:10px;">손난로🧤</th>
+          <th style="background:#6A1B9A;color:#F3E5F5;border:1px solid #7B1FA2;padding:4px 3px;text-align:center;font-weight:700;font-size:10px;">커피☕</th>
+          <th style="background:#6A1B9A;color:#F3E5F5;border:1px solid #7B1FA2;padding:4px 3px;text-align:center;font-weight:700;font-size:10px;">우산☂</th>
+          <th style="background:#6A1B9A;color:#F3E5F5;border:1px solid #7B1FA2;padding:4px 3px;text-align:center;font-weight:700;font-size:10px;">선풍기🌀</th>
+        </tr>
+      </thead>
+      <tbody id="dr-input-tbody"></tbody>
+      <tfoot>
+        <tr id="dr-input-total-row" style="display:none;">
+          <td style="background:#1A3A28;color:#fff;border:1px solid #2EAF6F;padding:7px 6px;text-align:center;font-weight:800;font-size:12px;">합  계</td>
+          <td id="dr-tot-ibcash"  style="background:#EAF3FA;border:1px solid #BDBDBD;padding:6px 6px;text-align:right;font-weight:800;font-size:12px;"></td>
+          <td id="dr-tot-ibcard"  style="background:#EAF3FA;border:1px solid #BDBDBD;padding:6px 6px;text-align:right;font-weight:800;font-size:12px;color:#1565C0;"></td>
+          <td id="dr-tot-jbcash"  style="background:#EAF3FA;border:1px solid #BDBDBD;padding:6px 6px;text-align:right;font-weight:800;font-size:12px;"></td>
+          <td id="dr-tot-jbcard"  style="background:#EAF3FA;border:1px solid #BDBDBD;padding:6px 6px;text-align:right;font-weight:800;font-size:12px;color:#1565C0;"></td>
+          <td id="dr-tot-sije"    style="background:#EAF3FA;border:1px solid #BDBDBD;padding:6px 6px;text-align:right;font-weight:800;font-size:12px;"></td>
+          <td id="dr-tot-bank"    style="background:#EAF3FA;border:1px solid #BDBDBD;padding:6px 6px;text-align:right;font-weight:800;font-size:12px;"></td>
+          <td id="dr-tot-other"   style="background:#EAF3FA;border:1px solid #BDBDBD;padding:6px 6px;text-align:right;font-weight:800;font-size:12px;"></td>
+          <td id="dr-tot-expense" style="background:#FFD5C0;border:1px solid #C44A00;padding:6px 6px;text-align:right;font-weight:800;font-size:12px;color:#7B2A00;"></td>
+          <td id="dr-tot-pat"     style="background:#EAF3FA;border:1px solid #BDBDBD;padding:6px 6px;text-align:right;font-weight:800;font-size:12px;"></td>
+          <td id="dr-tot-sonan"   style="background:#E1BEE7;border:1px solid #7B1FA2;padding:6px 6px;text-align:center;font-weight:800;font-size:12px;color:#4A235A;"></td>
+          <td id="dr-tot-coffee"  style="background:#E1BEE7;border:1px solid #7B1FA2;padding:6px 6px;text-align:center;font-weight:800;font-size:12px;color:#4A235A;"></td>
+          <td id="dr-tot-umbrella"style="background:#E1BEE7;border:1px solid #7B1FA2;padding:6px 6px;text-align:center;font-weight:800;font-size:12px;color:#4A235A;"></td>
+          <td id="dr-tot-fan"     style="background:#E1BEE7;border:1px solid #7B1FA2;padding:6px 6px;text-align:center;font-weight:800;font-size:12px;color:#4A235A;"></td>
+          <td id="dr-tot-outpat"  style="background:#90CAF9;border:1px solid #1565C0;padding:6px 6px;text-align:right;font-weight:800;font-size:13px;color:#0D47A1;"></td>
+          <td style="background:#F0F0F0;border:1px solid #BDBDBD;"></td>
+        </tr>
+      </tfoot>
+    </table>
+    <div id="dr-input-empty" style="text-align:center;color:#aaa;font-size:13px;padding:28px 0;">
+      연월 선택 후 <strong style="color:var(--green);">행 추가</strong>를 눌러 데이터를 입력하세요.
+    </div>
+    <p style="font-size:11px;color:#888;margin-top:10px;">✦ 일계(자동) = 의보현금+의보카드+자보현금+자보카드+시제+통장+기타수입 · Enter키로 다음 칸 이동</p>
+  </div>
+
+</div><!-- /daily-rev-inp-tab -->
+
+<div id="leave-inp-tab" class="input-tab-panel">
+
+  <div class="section-head" style="margin-bottom:12px;">
+    <span class="badge" style="background:#5B4FCF;">📅</span>
+    <div>
+      <h2>연차 / OFF 신청</h2>
+      <p>이름 선택 후 날짜를 골라 연차 또는 OFF를 신청하세요 · 연차 월 1개 / OFF 주 1개</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:18px;">
+      <div class="input-group" style="width:160px;">
+        <label>이름 선택</label>
+        <select class="select-input" id="leave-name" onchange="renderMyLeaveRequests()">
+          <option value="">-- 선택 --</option>
+        </select>
+      </div>
+      <div class="input-group" style="width:190px;">
+        <label>날짜</label>
+        <input type="date" id="leave-date" class="select-input">
+      </div>
+      <div style="display:flex;gap:8px;padding-bottom:1px;">
+        <button class="btn-annual" onclick="submitLeave('annual')">🗓️ 연차 신청</button>
+        <button class="btn-off-lv" onclick="submitLeave('off')">🔵 OFF 신청</button>
+      </div>
+    </div>
+    <div id="leave-status-msg" style="margin-bottom:8px;font-size:13px;font-weight:700;min-height:18px;"></div>
+    <div id="leave-quota-notice" style="margin-bottom:12px;font-size:12px;color:var(--text-mid);min-height:16px;"></div>
+    <div id="leave-my-requests"></div>
+  </div>
+
+</div><!-- /leave-inp-tab -->
+
+<div id="review-inp-tab" class="input-tab-panel">
+
+  <div class="section-head" style="margin-bottom:12px;">
+    <span class="badge orange">리뷰</span>
+    <div><h2>간호 리뷰 입력</h2><p>간호사가 도와드린 환자명 입력 · 저장 후 대시보드에 반영됩니다</p></div>
+  </div>
+
+  <!-- 연월 선택 -->
+  <div class="card" style="margin-bottom:14px;">
+    <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+      <div class="input-group" style="width:175px;">
+        <label>대상 연월</label>
+        <input type="month" id="review-month" style="width:175px;" onchange="loadReviewData()">
+      </div>
+    </div>
+  </div>
+
+  <!-- 날짜 네비게이터 + 간호사 입력 -->
+  <div class="card" style="margin-bottom:14px;">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+      <button id="review-prev-day" onclick="reviewNavigateDay(-1)"
+        style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:15px;cursor:pointer;font-weight:700;">◀</button>
+      <span id="review-day-label"
+        style="font-size:18px;font-weight:900;min-width:130px;text-align:center;color:var(--green-dark);"></span>
+      <button id="review-next-day" onclick="reviewNavigateDay(1)"
+        style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:15px;cursor:pointer;font-weight:700;">▶</button>
+    </div>
+    <div id="review-nurse-inputs" style="display:flex;flex-direction:column;gap:12px;"></div>
+    <div style="display:flex;align-items:center;gap:12px;margin-top:18px;">
+      <button class="btn-save" onclick="saveReviewData()">💾 저장 · 대시보드 반영</button>
+      <span id="review-save-status" style="font-size:13px;font-weight:700;"></span>
+    </div>
+  </div>
+
+  <!-- 이번 달 요약 -->
+  <div class="card">
+    <div class="section-head" style="margin-bottom:12px;">
+      <span class="badge">요약</span>
+      <div><h2>이번 달 일별 현황</h2><p>숫자 위에 마우스를 올리면 환자명 확인 가능</p></div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead id="review-summary-head"></thead>
+        <tbody id="review-summary-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /review-inp-tab -->
+
+<!-- ══ 출퇴근 입력 탭 ══ -->
+<div id="attend-inp-tab" class="input-tab-panel">
+
+  <div class="section-head" style="margin-bottom:12px;">
+    <span class="badge" style="background:#6366F1;color:#fff;">출퇴근</span>
+    <div><h2>출퇴근 데이터 입력</h2><p>◉ 출퇴근명부 엑셀에서 해당 월 시트 전체 복사 후 붙여넣기</p></div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+      <div>
+        <label style="font-size:12px;color:#888;display:block;margin-bottom:4px;">연도(YY)</label>
+        <select id="at-year" style="padding:8px 12px;border:1.5px solid #E0E0E0;border-radius:10px;font-size:14px;font-family:inherit;background:#fff;">
+          <option value="25">2025</option><option value="26" selected>2026</option><option value="27">2027</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:12px;color:#888;display:block;margin-bottom:4px;">월</label>
+        <select id="at-month" style="padding:8px 12px;border:1.5px solid #E0E0E0;border-radius:10px;font-size:14px;font-family:inherit;background:#fff;">
+          <option value="01">1월</option><option value="02">2월</option><option value="03">3월</option>
+          <option value="04">4월</option><option value="05">5월</option><option value="06">6월</option>
+          <option value="07">7월</option><option value="08">8월</option><option value="09">9월</option>
+          <option value="10">10월</option><option value="11">11월</option><option value="12">12월</option>
+        </select>
+      </div>
+      <button class="btn-load" onclick="loadAttendFromStorage()" style="margin-top:18px;">📂 저장 데이터 불러오기</button>
+    </div>
+  </div>
+
+  <div class="notice-box" style="margin-bottom:16px;">
+    <span>📋</span>
+    <p>엑셀 출퇴근명부에서 해당 월 시트를 클릭 → <strong>Ctrl+A</strong> (전체선택) → <strong>Ctrl+C</strong> (복사) → 아래 붙여넣기 영역에 <strong>Ctrl+V</strong>. 자동으로 직원별 출퇴근 데이터와 특이사항을 인식합니다.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <h3 style="font-size:15px;font-weight:800;color:var(--text-dark);margin:0;">엑셀 데이터 붙여넣기</h3>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-load" onclick="document.getElementById('at-paste').value='';document.getElementById('at-parse-preview').style.display='none';">🗑 지우기</button>
+        <button class="btn-load" onclick="parseAttendData()">📋 파싱 미리보기</button>
+      </div>
+    </div>
+    <textarea id="at-paste" placeholder="여기에 Ctrl+V 로 붙여넣기..." rows="5"
+      style="width:100%;box-sizing:border-box;padding:12px;border:1.5px solid #E0E0E0;border-radius:10px;font-size:12px;font-family:monospace;resize:vertical;color:#555;"
+      onpaste="setTimeout(parseAttendData,100)"></textarea>
+    <div id="at-parse-preview" style="display:none;margin-top:12px;padding:12px;background:#F0FFF4;border-radius:10px;font-size:13px;color:#2D6A4F;line-height:1.7;"></div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h3 style="font-size:15px;font-weight:800;color:var(--text-dark);margin:0 0 14px;">주차별 특이사항 <span style="font-size:11px;color:#aaa;font-weight:400;">(자동 파싱 또는 직접 입력·수정)</span></h3>
+    <div style="margin-bottom:12px;">
+      <label style="font-size:12px;font-weight:700;color:#6366F1;display:block;margin-bottom:5px;">📅 1~10일 특이사항</label>
+      <textarea id="at-notes-1" rows="4" style="width:100%;box-sizing:border-box;padding:10px;border:1.5px solid #E0E0E0;border-radius:10px;font-size:13px;font-family:inherit;resize:vertical;"></textarea>
+    </div>
+    <div style="margin-bottom:12px;">
+      <label style="font-size:12px;font-weight:700;color:#6366F1;display:block;margin-bottom:5px;">📅 11~20일 특이사항</label>
+      <textarea id="at-notes-2" rows="4" style="width:100%;box-sizing:border-box;padding:10px;border:1.5px solid #E0E0E0;border-radius:10px;font-size:13px;font-family:inherit;resize:vertical;"></textarea>
+    </div>
+    <div>
+      <label style="font-size:12px;font-weight:700;color:#6366F1;display:block;margin-bottom:5px;">📅 21~31일 특이사항</label>
+      <textarea id="at-notes-3" rows="4" style="width:100%;box-sizing:border-box;padding:10px;border:1.5px solid #E0E0E0;border-radius:10px;font-size:13px;font-family:inherit;resize:vertical;"></textarea>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-save" onclick="saveAttendData()">💾 저장 · 대시보드 반영</button>
+    <span id="at-save-status" class="save-status"></span>
+  </div>
+
+</div><!-- /attend-inp-tab -->
+
+</main>
+
+<script>
+const STORAGE_PREFIX = 'leadersos_insen_';
+const PT_STAFF  = ['김민겸', '이희원', '김택수', '김세인'];
+const CARM_STAFF = ['최문기', '양금하'];
+const NURSE_STAFF = ['정영현', '송다영', '임다빈', '노희원'];
+const PT_CODES  = ['m0','m2','m3','m4','m5','m6','m8','e0','e2','e3','e4','e5'];
+const CODE_NAMES = {
+  m0:'기본 물리치료', m2:'물리치료', m3:'물리치료',
+  m4:'물리치료',     m5:'물리치료', m6:'물리치료',
+  m8:'물리치료',     e0:'충격파',   e2:'충격파',
+  e3:'충격파',      e4:'충격파',   e5:'충격파'
+};
+let RATES = { m0:5000, m2:7000, m3:10000, m4:13000, m5:16000, m6:19000, m8:25000, e0:1750, e2:3500, e3:0, e4:0, e5:0, carm:1500, nurse:1000, teamlead:0.4 };
+
+function fmt(n) { return Math.round(n).toLocaleString('ko-KR'); }
+
+let _ptWeek = 1;
+function selectPtWeek(w) {
+  _ptWeek = w;
+  for (let i = 1; i <= 4; i++) {
+    const show = i === w;
+    document.querySelectorAll(`.pt-wk${i}`).forEach(el => { el.style.display = show ? '' : 'none'; });
+  }
+  document.querySelectorAll('.pt-wk-btn').forEach((btn, idx) => { btn.classList.toggle('active', idx+1 === w); });
+}
+
+function ptUpdateRowSum(name, code) {
+  let total = 0;
+  for (let w = 1; w <= 4; w++) {
+    const el = document.getElementById(`pt-${name}-${code}-w${w}`);
+    total += parseInt(el?.value || 0);
+  }
+  const sumEl = document.getElementById(`pt-sum-${name}-${code}`);
+  if (sumEl) sumEl.textContent = total > 0 ? total : '—';
+}
+
+// ── 폼 생성 ──
+function buildForms() {
+  const ptEl = document.getElementById('pt-blocks');
+  ptEl.innerHTML = PT_STAFF.map(name => `
+    <div class="staff-block" style="margin-bottom:16px;">
+      <div class="staff-block-title">${name} <span class="rate-badge">PT 치료사</span></div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;min-width:480px;">
+          <thead>
+            <tr>
+              <th style="background:var(--green-dark);color:#fff;padding:8px 12px;text-align:left;font-weight:800;border-radius:8px 0 0 0;white-space:nowrap;">코드</th>
+              <th class="pt-wk1" style="background:var(--green-dark);color:#fff;padding:8px 10px;text-align:center;font-weight:800;">1주차</th>
+              <th class="pt-wk2" style="background:var(--green-dark);color:#fff;padding:8px 10px;text-align:center;font-weight:800;display:none;">2주차</th>
+              <th class="pt-wk3" style="background:var(--green-dark);color:#fff;padding:8px 10px;text-align:center;font-weight:800;display:none;">3주차</th>
+              <th class="pt-wk4" style="background:var(--green-dark);color:#fff;padding:8px 10px;text-align:center;font-weight:800;display:none;">4주차</th>
+              <th style="background:var(--green-dark);color:#fff;padding:8px 10px;text-align:center;font-weight:800;border-radius:0 8px 0 0;">합계</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${PT_CODES.map((code, ci) => `
+              <tr style="background:${ci%2===0?'#F4FAF7':'#fff'};">
+                <td style="padding:7px 12px;font-size:12px;font-weight:700;white-space:nowrap;">${code} <span style="color:var(--text-light);font-weight:400;">${CODE_NAMES[code]}</span></td>
+                ${[1,2,3,4].map(w => `<td class="pt-wk${w}" style="padding:4px 6px;text-align:center;${w>1?'display:none;':''}"><input type="number" id="pt-${name}-${code}-w${w}" min="0" placeholder="0" style="width:60px;padding:6px 4px;border:1.5px solid #C6E8D4;border-radius:7px;font-size:13px;text-align:center;font-family:inherit;outline:none;" oninput="ptUpdateRowSum('${name}','${code}')" onfocus="this.select();this.style.borderColor='var(--green)';" onblur="this.style.borderColor='#C6E8D4';"></td>`).join('')}
+                <td style="padding:7px 10px;text-align:center;font-size:13px;font-weight:800;color:var(--green);" id="pt-sum-${name}-${code}">—</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`).join('');
+
+}
+
+// ── C-arm / 간호 날짜 네비게이터 ──
+let _dNav = { day: 1, carm: {}, nurse: {} };
+
+function initDailyNav() {
+  const monthVal = document.getElementById('input-month').value;
+  const carmWrap = document.getElementById('carm-daily-wrap');
+  const nurseWrap = document.getElementById('nurse-daily-wrap');
+  if (!monthVal) { if (carmWrap) carmWrap.innerHTML=''; if (nurseWrap) nurseWrap.innerHTML=''; return; }
+  const [y, m] = monthVal.split('-');
+  const dim = new Date(parseInt(y), parseInt(m), 0).getDate();
+  _dNav.day = Math.min(new Date().getDate(), dim);
+  _dNav.carm = {}; CARM_STAFF.forEach(n => { _dNav.carm[n] = {}; });
+  _dNav.nurse = {}; NURSE_STAFF.forEach(n => { _dNav.nurse[n] = {}; });
+  _buildDNavUI();
+  _renderDNavDay();
+}
+
+function _buildDNavUI() {
+  const nav = `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap;">
+      <button id="d-nav-prev" onclick="dNavMove(-1)"
+        style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:16px;cursor:pointer;font-weight:700;">◀</button>
+      <span id="d-nav-label" style="font-size:17px;font-weight:900;min-width:110px;text-align:center;color:var(--green-dark);"></span>
+      <button id="d-nav-next" onclick="dNavMove(1)"
+        style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:16px;cursor:pointer;font-weight:700;">▶</button>
+    </div>`;
+
+  const carmWrap = document.getElementById('carm-daily-wrap');
+  if (carmWrap) carmWrap.innerHTML = `
+    <div class="card" style="padding:14px 20px;">
+      ${nav}
+      <div style="display:flex;gap:24px;flex-wrap:wrap;">
+        ${CARM_STAFF.map(name => `
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:13px;font-weight:800;color:var(--green-dark);min-width:44px;">${name}</span>
+            <input type="number" id="cd-inp-${name}" min="0" placeholder="0"
+              style="width:74px;padding:8px 6px;border:1.5px solid #FFD5C0;border-radius:8px;font-size:16px;text-align:center;font-family:inherit;outline:none;background:var(--orange-pale);"
+              onfocus="this.select();this.style.borderColor='var(--orange)';"
+              onblur="this.style.borderColor='#FFD5C0';">
+            <span style="font-size:12px;color:var(--text-light);">건</span>
+          </div>`).join('')}
+      </div>
+    </div>`;
+
+  const nurseWrap = document.getElementById('nurse-daily-wrap');
+  if (nurseWrap) nurseWrap.innerHTML = `
+    <div class="card" style="padding:14px 20px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap;">
+        <button id="nd-nav-prev" onclick="dNavMove(-1)"
+          style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:16px;cursor:pointer;font-weight:700;">◀</button>
+        <span id="nd-nav-label" style="font-size:17px;font-weight:900;min-width:110px;text-align:center;color:var(--green-dark);"></span>
+        <button id="nd-nav-next" onclick="dNavMove(1)"
+          style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:16px;cursor:pointer;font-weight:700;">▶</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;">
+        ${NURSE_STAFF.map(name => `
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:13px;font-weight:800;color:var(--green-dark);min-width:44px;">${name}</span>
+            <input type="number" id="nd-inp-${name}" min="0" placeholder="0"
+              style="width:74px;padding:8px 6px;border:1.5px solid #FFD5C0;border-radius:8px;font-size:16px;text-align:center;font-family:inherit;outline:none;background:var(--orange-pale);"
+              onfocus="this.select();this.style.borderColor='var(--orange)';"
+              onblur="this.style.borderColor='#FFD5C0';">
+            <span style="font-size:12px;color:var(--text-light);">건</span>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function _saveDNavDay() {
+  const d = String(_dNav.day);
+  CARM_STAFF.forEach(name => {
+    const v = parseInt(document.getElementById(`cd-inp-${name}`)?.value || 0);
+    if (v > 0) _dNav.carm[name][d] = v; else delete _dNav.carm[name][d];
+  });
+  NURSE_STAFF.forEach(name => {
+    const v = parseInt(document.getElementById(`nd-inp-${name}`)?.value || 0);
+    if (v > 0) _dNav.nurse[name][d] = v; else delete _dNav.nurse[name][d];
+  });
+}
+
+function _renderDNavDay() {
+  const monthVal = document.getElementById('input-month').value;
+  if (!monthVal) return;
+  const [y, m] = monthVal.split('-');
+  const dim = new Date(parseInt(y), parseInt(m), 0).getDate();
+  const date = new Date(parseInt(y), parseInt(m)-1, _dNav.day);
+  const wd = ['일','월','화','수','목','금','토'][date.getDay()];
+  const dayText = `${_dNav.day}일 (${wd})`;
+  ['d-nav-label','nd-nav-label'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = dayText; });
+  [['d-nav-prev','nd-nav-prev'], ['d-nav-next','nd-nav-next']].forEach(([a, b], isNext) => {
+    const dis = isNext ? _dNav.day >= dim : _dNav.day <= 1;
+    [a, b].forEach(id => { const el = document.getElementById(id); if (el) { el.disabled = dis; el.style.opacity = dis ? '0.4' : '1'; } });
+  });
+  const d = String(_dNav.day);
+  CARM_STAFF.forEach(name => { const el = document.getElementById(`cd-inp-${name}`); if (el) el.value = _dNav.carm[name]?.[d] || ''; });
+  NURSE_STAFF.forEach(name => { const el = document.getElementById(`nd-inp-${name}`); if (el) el.value = _dNav.nurse[name]?.[d] || ''; });
+}
+
+function dNavMove(delta) {
+  _saveDNavDay();
+  const monthVal = document.getElementById('input-month').value;
+  const [y, m] = monthVal.split('-');
+  const dim = new Date(parseInt(y), parseInt(m), 0).getDate();
+  _dNav.day = Math.max(1, Math.min(dim, _dNav.day + delta));
+  _renderDNavDay();
+}
+
+function buildDailyTables() { initDailyNav(); }
+
+// ── localStorage 저장 ──
+function collectData() {
+  const monthVal = document.getElementById('input-month').value;
+  if (!monthVal) return null;
+  const [y, m] = monthVal.split('-');
+  const monthKey = `${y.slice(2)}.${m.padStart(2,'0')}`;
+  const label    = `${y.slice(2)}년 ${parseInt(m)}월`;
+
+  const ptTotals = {}, rawCounts = { pt:{}, carm:{}, nurse:{} };
+  PT_STAFF.forEach(name => {
+    let total = 0; rawCounts.pt[name] = {};
+    PT_CODES.forEach(code => {
+      let codeCount = 0;
+      for (let w = 1; w <= 4; w++) {
+        const v = parseInt(document.getElementById(`pt-${name}-${code}-w${w}`)?.value || 0);
+        rawCounts.pt[name][`${code}_w${w}`] = v;
+        codeCount += v;
+      }
+      rawCounts.pt[name][code] = codeCount;
+      total += codeCount * (RATES[code] || 0);
+    });
+    ptTotals[name] = total;
+  });
+
+  _saveDNavDay();
+  const carmTotals = {};
+  CARM_STAFF.forEach(name => {
+    let cnt = 0; rawCounts.carm[name] = {};
+    Object.entries(_dNav.carm[name] || {}).forEach(([d, v]) => { rawCounts.carm[name][d] = v; cnt += v; });
+    carmTotals[name] = cnt * RATES.carm;
+  });
+
+  const nurseTotals = {};
+  NURSE_STAFF.forEach(name => {
+    let cnt = 0; rawCounts.nurse[name] = {};
+    Object.entries(_dNav.nurse[name] || {}).forEach(([d, v]) => { rawCounts.nurse[name][d] = v; cnt += v; });
+    if (cnt > 0) nurseTotals[name] = cnt * RATES.nurse;
+  });
+
+  const rev = parseInt(document.getElementById('input-total-revenue')?.value || 0);
+  const tl  = Math.round(rev * RATES.teamlead / 100);
+
+  return {
+    entry: { month:monthKey, label, pt:ptTotals, carm:carmTotals, nurse:nurseTotals, teamlead:tl, totalRevenue:rev },
+    raw:   { month:monthKey, ...rawCounts, totalRevenue:rev }
+  };
+}
+
+function saveToStorage() {
+  const data = collectData();
+  if (!data) { showStatus('연월을 선택해주세요.', false); return; }
+
+  localStorage.setItem(STORAGE_PREFIX + data.entry.month, JSON.stringify(data.entry));
+  localStorage.setItem(STORAGE_PREFIX + 'raw_' + data.entry.month, JSON.stringify(data.raw));
+
+  showStatus(`✓ ${data.entry.label} 저장 완료 · 대시보드에 반영됨`, true);
+}
+
+// ── 이전 입력 불러오기 ──
+function loadPrevious() {
+  const monthVal = document.getElementById('input-month').value;
+  if (!monthVal) { showStatus('연월을 먼저 선택하세요.', false); return; }
+  const [y, m] = monthVal.split('-');
+  const monthKey = `${y.slice(2)}.${m.padStart(2,'0')}`;
+  const stored = localStorage.getItem(STORAGE_PREFIX + 'raw_' + monthKey);
+  if (!stored) { showStatus('저장된 이전 데이터가 없습니다.', false); return; }
+
+  const raw = JSON.parse(stored);
+  PT_STAFF.forEach(name => {
+    PT_CODES.forEach(code => {
+      for (let w = 1; w <= 4; w++) {
+        const el = document.getElementById(`pt-${name}-${code}-w${w}`);
+        if (el) el.value = raw.pt?.[name]?.[`${code}_w${w}`] || '';
+      }
+      ptUpdateRowSum(name, code);
+    });
+  });
+  CARM_STAFF.forEach(name => {
+    _dNav.carm[name] = {};
+    const dayData = raw.carm?.[name];
+    if (dayData && typeof dayData === 'object') {
+      Object.entries(dayData).forEach(([d, v]) => { if (v > 0) _dNav.carm[name][d] = v; });
+    }
+  });
+  NURSE_STAFF.forEach(name => {
+    _dNav.nurse[name] = {};
+    const dayData = raw.nurse?.[name];
+    if (dayData && typeof dayData === 'object') {
+      Object.entries(dayData).forEach(([d, v]) => { if (v > 0) _dNav.nurse[name][d] = v; });
+    }
+  });
+  _renderDNavDay();
+  const revEl = document.getElementById('input-total-revenue');
+  if (revEl) revEl.value = raw.totalRevenue || '';
+
+  showStatus('이전 입력 불러오기 완료', true);
+}
+
+function onMonthChange() {
+  document.getElementById('save-status').textContent = '';
+  buildDailyTables();
+}
+
+function showStatus(msg, ok) {
+  const el = document.getElementById('save-status');
+  el.textContent = msg;
+  el.className = 'save-status ' + (ok ? 'ok' : 'err');
+  setTimeout(() => { el.textContent = ''; }, 4000);
+}
+
+// ── 초기화 ──
+window.addEventListener('load', () => {
+  const now = new Date();
+  const ym = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  document.getElementById('input-month').value = ym;
+  const mmPad = String(now.getMonth()+1).padStart(2,'0');
+  if (document.getElementById('at-month')) document.getElementById('at-month').value = mmPad;
+  document.getElementById('dr-input-month').value = ym;
+  buildForms();
+  buildDailyTables();
+  initLeaveForm();
+  onDrMonthChange();
+  initReviewTab();
+  // 출퇴근 탭: 이미 at-month 초기화 완료
+});
+
+// ══ 출퇴근 입력 ══════════════════════════════════
+const AT_STORE_KEY = 'leadersos_attend_';
+let _atParsed = null;
+
+function _atMonthKey() {
+  return document.getElementById('at-year').value + '.' + document.getElementById('at-month').value;
+}
+
+function loadAttendFromStorage() {
+  const key = _atMonthKey();
+  const raw = localStorage.getItem(AT_STORE_KEY + key);
+  if (!raw) { _showAtStatus('저장된 데이터가 없습니다.', false); return; }
+  _atParsed = JSON.parse(raw);
+  document.getElementById('at-notes-1').value = _atParsed.notes['1'] || '';
+  document.getElementById('at-notes-2').value = _atParsed.notes['2'] || '';
+  document.getElementById('at-notes-3').value = _atParsed.notes['3'] || '';
+  _showAtPreview(_atParsed.workers);
+  _showAtStatus(`✓ ${key} 데이터 불러옴 (${_atParsed.workers.length}명)`, true);
+}
+
+function parseAttendData() {
+  const text = document.getElementById('at-paste').value;
+  if (!text.trim()) return;
+  try {
+    const result = _parseAttendTSV(text);
+    const dbg = result.debugLines.join(' | ');
+    if (!result.workers.length) {
+      const msg = result.debugLines.length
+        ? '섹션 감지(' + dbg + ')됐으나 직원명 인식 실패. 엑셀 형식을 확인해주세요.'
+        : '"날짜" 셀을 찾을 수 없습니다. 출퇴근명부 해당 월 시트에서 Ctrl+A → Ctrl+C 해주세요.';
+      _showAtPreview([], msg);
+      _showAtStatus('직원 데이터를 찾을 수 없습니다.', false);
+      return;
+    }
+    _atParsed = { month: _atMonthKey(), workers: result.workers, notes: result.notes };
+    if (result.notes['1']) document.getElementById('at-notes-1').value = result.notes['1'];
+    if (result.notes['2']) document.getElementById('at-notes-2').value = result.notes['2'];
+    if (result.notes['3']) document.getElementById('at-notes-3').value = result.notes['3'];
+    _showAtPreview(result.workers, dbg);
+    _showAtStatus(`✓ 파싱 완료 — ${result.workers.length}명 인식됨. 저장 버튼을 눌러주세요.`, true);
+  } catch(e) {
+    _showAtStatus('파싱 오류: ' + e.message, false);
+  }
+}
+
+function saveAttendData() {
+  if (!_atParsed || !_atParsed.workers.length) {
+    _showAtStatus('먼저 데이터를 파싱하거나 불러와야 합니다.', false); return;
+  }
+  _atParsed.notes['1'] = document.getElementById('at-notes-1').value;
+  _atParsed.notes['2'] = document.getElementById('at-notes-2').value;
+  _atParsed.notes['3'] = document.getElementById('at-notes-3').value;
+  _atParsed.month = _atMonthKey();
+  localStorage.setItem(AT_STORE_KEY + _atParsed.month, JSON.stringify(_atParsed));
+  _showAtStatus(`✓ ${_atParsed.month} 저장 완료 · 대시보드에 반영됨`, true);
+}
+
+function _showAtStatus(msg, ok) {
+  const el = document.getElementById('at-save-status');
+  el.textContent = msg; el.style.color = ok ? 'var(--green)' : '#E74C3C';
+}
+
+function _showAtPreview(workers, debugInfo) {
+  const el = document.getElementById('at-parse-preview');
+  if (!workers.length && !debugInfo) { el.style.display = 'none'; return; }
+  let html = '';
+  if (debugInfo) html += `<div style="font-size:11px;color:#888;margin-bottom:5px;">🔍 ${debugInfo}</div>`;
+  if (workers.length) {
+    const lines = workers.map(w => {
+      const dcnt = Object.keys(w.days).length;
+      return `<span style="display:inline-block;background:#C8EAD3;color:#2D6A4F;border-radius:6px;padding:2px 8px;margin:2px;font-size:12px;font-weight:700;">${w.name} (${dcnt}일)</span>`;
+    }).join('');
+    html += `<div style="margin-bottom:6px;font-weight:700;">인식된 직원 ${workers.length}명:</div>${lines}`;
+  }
+  el.style.display = 'block';
+  el.innerHTML = html;
+}
+
+// ── TSV 파서 (quoted multi-line 지원) ──
+function _parseTSV(text) {
+  const rows = []; let row = [], cell = '', inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQ) {
+      if (c === '"' && text[i+1] === '"') { cell += '"'; i++; }
+      else if (c === '"') inQ = false;
+      else cell += c;
+    } else {
+      if (c === '"') inQ = true;
+      else if (c === '\t') { row.push(cell); cell = ''; }
+      else if (c === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
+      else if (c !== '\r') cell += c;
+    }
+  }
+  if (cell !== '' || row.length) { row.push(cell); rows.push(row); }
+  return rows;
+}
+
+function _convAttTime(v) {
+  if (!v) return '';
+  v = v.trim();
+  if (!v || v === '-') return '';
+  const SPEC = ['OFF','연차','경조사','일요일','공휴일','대체','반차','출산','무급','휴일'];
+  for (const s of SPEC) if (v.startsWith(s)) return s;
+  // HH:MM 또는 H:MM (Excel 표시값 그대로)
+  if (/^\d{1,2}:\d{2}(:\d{2})?$/.test(v)) {
+    const [h, m] = v.split(':');
+    return `${h.padStart(2,'0')}:${m}`;
+  }
+  // 오전/오후 형식
+  const ko = v.match(/^(오전|오후)\s*(\d{1,2}):(\d{2})/);
+  if (ko) {
+    let h = parseInt(ko[2]);
+    if (ko[1] === '오후' && h < 12) h += 12;
+    if (ko[1] === '오전' && h === 12) h = 0;
+    return `${String(h).padStart(2,'0')}:${String(ko[3]).padStart(2,'0')}`;
+  }
+  // Excel 소수점 시간값
+  const num = parseFloat(v);
+  if (!isNaN(num) && num > 0 && num < 1) {
+    const mm = Math.round(num * 1440);
+    return `${String(Math.floor(mm/60)).padStart(2,'0')}:${String(mm%60).padStart(2,'0')}`;
+  }
+  return '';
+}
+
+// ── 지문인식 로그 형식 파서 ──
+// 형식: 인증일시 | 요일 | ... | 이름 | ... | 인증모드(출근/퇴근) | 인증상태
+function _parseFingerprintLog(rows) {
+  const dayData = {}, workerOrder = [];
+  const notes = { '1': '', '2': '', '3': '' };
+  const debugLines = [];
+
+  // 헤더 행 탐색
+  let dtCol = -1, nameCol = -1, modeCol = -1, statusCol = -1, headerRowIdx = -1;
+  for (let i = 0; i < rows.length; i++) {
+    const idx = rows[i].findIndex(c => c.trim() === '인증일시');
+    if (idx >= 0) {
+      dtCol = idx;
+      nameCol   = rows[i].findIndex(c => c.trim() === '이름');
+      modeCol   = rows[i].findIndex(c => c.trim() === '인증모드');
+      statusCol = rows[i].findIndex(c => c.trim() === '인증상태');
+      headerRowIdx = i;
+      break;
+    }
+  }
+
+  if (dtCol < 0 || nameCol < 0 || modeCol < 0) {
+    return { workers: [], notes, debugLines: ['지문인식 헤더 행을 찾을 수 없음'] };
+  }
+  debugLines.push(`지문인식로그: 이름@${nameCol}, 모드@${modeCol}`);
+
+  for (let i = headerRowIdx + 1; i < rows.length; i++) {
+    const row = rows[i];
+    if (!row.length || row.every(c => !c.trim())) continue;
+
+    const dtRaw  = (row[dtCol]    || '').trim();
+    const name   = (row[nameCol]  || '').trim();
+    const mode   = (row[modeCol]  || '').trim();
+    const status = statusCol >= 0 ? (row[statusCol] || '').trim() : '성공';
+
+    if (!dtRaw || !name) continue;
+    if (mode !== '출근' && mode !== '퇴근') continue;
+    if (status && status !== '성공') continue;  // 실패 스캔 제외
+
+    // "2026-05-01 오전 08:25:15" 파싱
+    const dm = dtRaw.match(/\d{4}-\d{2}-(\d{2})\s+(오전|오후)\s+(\d{1,2}):(\d{2})/);
+    if (!dm) continue;
+
+    const day = parseInt(dm[1]);
+    let h = parseInt(dm[3]);
+    if (dm[2] === '오후' && h < 12) h += 12;
+    if (dm[2] === '오전' && h === 12) h = 0;
+    const timeStr = `${String(h).padStart(2,'0')}:${dm[4]}`;
+
+    if (!dayData[name]) { dayData[name] = {}; workerOrder.push(name); }
+    if (!dayData[name][day]) dayData[name][day] = { in: null, out: null };
+
+    if (mode === '출근') {
+      // 하루 중 가장 이른 출근
+      if (!dayData[name][day].in || timeStr < dayData[name][day].in) dayData[name][day].in = timeStr;
+    } else {
+      // 하루 중 가장 늦은 퇴근
+      if (!dayData[name][day].out || timeStr > dayData[name][day].out) dayData[name][day].out = timeStr;
+    }
+  }
+
+  const workers = workerOrder.map(name => ({
+    role: '', name,
+    days: Object.fromEntries(
+      Object.entries(dayData[name])
+        .filter(([, t]) => t.in || t.out)
+        .map(([d, t]) => [d, { in: t.in || '', out: t.out || '' }])
+    )
+  })).filter(w => Object.keys(w.days).length > 0);
+
+  return { workers, notes, debugLines };
+}
+
+function _parseAttendTSV(text) {
+  const rows = _parseTSV(text);
+
+  // 지문인식 로그 형식 자동 감지 (인증일시 컬럼 존재 여부로 판단)
+  if (rows.some(r => r.some(c => c.trim() === '인증일시'))) {
+    return _parseFingerprintLog(rows);
+  }
+
+  const workers = {}, workerOrder = [];
+  const notes = { '1': '', '2': '', '3': '' };
+  let dateMap = {}, nameColIdx = -1, lastRole = '', sectionCount = 0;
+  const debugLines = [];
+
+  for (const row of rows) {
+    if (!row.length || row.every(c => !c.trim())) continue;
+
+    // "날짜" 셀을 어느 열에서든 동적으로 탐색 (하드코딩 제거)
+    const nIdx = row.findIndex(c => c.trim() === '날짜');
+    if (nIdx >= 0) {
+      nameColIdx = nIdx;
+      dateMap = {};
+      sectionCount = Math.min(sectionCount + 1, 3);
+      // 실제 날짜 시작 열 자동 탐지 (+1 또는 +2, 병합셀 대응)
+      let dateStartCol = nameColIdx + 1;
+      for (let c = nameColIdx + 1; c < Math.min(nameColIdx + 5, row.length); c++) {
+        if (/^\d+$/.test((row[c] || '').trim())) { dateStartCol = c; break; }
+      }
+      for (let c = dateStartCol; c < row.length; c += 2) {
+        const v = (row[c] || '').replace(/\s*\([^)]*\)/g, '').trim();
+        const n = parseInt(v);
+        if (n >= 1 && n <= 31) dateMap[c] = n;
+      }
+      debugLines.push(`S${sectionCount}:날짜@${nameColIdx},시작@${dateStartCol},날수${Object.keys(dateMap).length}`);
+      continue;
+    }
+
+    if (nameColIdx < 0 || !Object.keys(dateMap).length) continue;
+
+    const c2 = (row[nameColIdx] || '').trim();
+    const c1 = nameColIdx > 0 ? (row[nameColIdx - 1] || '').trim() : '';
+
+    // 헤더/서브헤더 행 스킵
+    if (!c2 || c1 === '직책' || c2 === '이름' || c2 === '출근' || c2 === '퇴근') continue;
+
+    // 특이사항·범례 행 감지 — seenNotes로 막지 않고 계속 처리 (다음 섹션 파싱 유지)
+    const rowFlat = row.join('');
+    if (rowFlat.includes('표식') || rowFlat.includes('범례') || rowFlat.includes('특이사항') ||
+        (c1.includes('표') && c1.includes('식'))) {
+      const noteVal = row.slice(nameColIdx + 1).find(c => {
+        const t = c.trim();
+        return t && !['표식','범례','특이사항'].some(k => t.includes(k));
+      });
+      if (noteVal && sectionCount >= 1) notes[String(sectionCount)] = noteVal.trim();
+      continue;
+    }
+
+    // 직원명 검증 (2~5자, 숫자·특수문자만인 행 제외)
+    if (c2.length < 2 || c2.length > 5 || /^[\d.\-\/]+$/.test(c2)) continue;
+
+    const role = c1 || lastRole;
+    if (c1) lastRole = role;
+    if (!workers[c2]) { workers[c2] = { role, name: c2, days: {} }; workerOrder.push(c2); }
+
+    for (const [ci, dayNum] of Object.entries(dateMap)) {
+      const c = parseInt(ci);
+      const inRaw = (row[c] || '').trim();
+      const outRaw = (row[c + 1] || '').trim();
+      if (!inRaw) continue;
+      const iv = _convAttTime(inRaw);
+      if (iv) workers[c2].days[String(dayNum)] = { in: iv, out: _convAttTime(outRaw) };
+    }
+  }
+
+  return {
+    workers: workerOrder.map(n => workers[n]).filter(w => Object.keys(w.days).length > 0),
+    notes,
+    debugLines
+  };
+}
+
+// ── 탭 전환 ──
+function switchInputTab(id, btn) {
+  document.querySelectorAll('.input-tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.input-tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById(id + '-tab').classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── 일별수입 입력 (일일정산 형식) ──
+// row: [date, ibCash, ibCard, jbCash, jbCard, sije, bank, other, expense, patCount, sonan, coffee]
+const DR_KEY = 'leadersos_dailyrev_';
+const DR_WD = ['일','월','화','수','목','금','토'];
+
+function getDrEventLabelsInp(monthVal) {
+  // monthVal = 'YYYY-MM'
+  const mm = parseInt((monthVal || '').split('-')[1] || '0', 10);
+  if ([12, 1, 2].includes(mm)) return ['손난로🧤', '커피☕'];
+  if ([6, 7, 8].includes(mm)) return ['커피☕', '선풍기🌀'];
+  return ['커피☕', '우산☂'];
+}
+
+function onDrMonthChange() {
+  document.getElementById('dr-save-status').textContent = '';
+  const mv = document.getElementById('dr-input-month').value;
+  const [lbl1, lbl2] = getDrEventLabelsInp(mv);
+  const h1 = document.getElementById('inp-ev-hdr1');
+  const h2 = document.getElementById('inp-ev-hdr2');
+  if (h1) h1.textContent = lbl1;
+  if (h2) h2.textContent = lbl2;
+}
+
+function drCalcRow(tr) {
+  const cells = tr.querySelectorAll('input.dr-cell');
+  // 0=date,1=ibCash,2=ibCard,3=jbCash,4=jbCard,5=sije,6=bank,7=other,8=expense,9=pat,10=sonan,11=coffee,12=umbrella,13=fan
+  const op = (parseInt(cells[1].value)||0)+(parseInt(cells[2].value)||0)
+           + (parseInt(cells[3].value)||0)+(parseInt(cells[4].value)||0)
+           + (parseInt(cells[5].value)||0)+(parseInt(cells[6].value)||0)
+           + (parseInt(cells[7].value)||0);
+  tr.querySelector('.dr-auto-op').textContent = op > 0 ? op.toLocaleString('ko-KR') : '';
+  drUpdateTotal();
+}
+
+function drUpdateDateLabel(tr) {
+  const dateVal = tr.querySelector('input.dr-date').value;
+  const label = tr.querySelector('.dr-date-label');
+  if (!dateVal) { label.textContent = ''; return; }
+  const d = new Date(dateVal + 'T00:00:00');
+  const wd = d.getDay();
+  label.textContent = DR_WD[wd];
+  label.style.color = wd===0 ? '#C44A00' : wd===6 ? '#1565C0' : '#555';
+}
+
+function drNextCell(el) {
+  const inputs = [...document.querySelectorAll('#dr-input-tbody input.dr-date, #dr-input-tbody input.dr-cell')];
+  const idx = inputs.indexOf(el);
+  if (idx >= 0 && idx < inputs.length - 1) inputs[idx + 1].focus();
+}
+
+function drUpdateTotal() {
+  const trs = document.querySelectorAll('#dr-input-tbody tr');
+  if (trs.length === 0) return;
+  // ibCash,ibCard,jbCash,jbCard,sije,bank,other,expense,pat,sonan,coffee,umbrella,fan
+  const s = [0,0,0,0,0,0,0,0,0,0,0,0,0];
+  trs.forEach(tr => {
+    const c = tr.querySelectorAll('input.dr-cell');
+    for (let i = 0; i < 13; i++) s[i] += parseInt(c[i+1]?.value)||0;
+  });
+  const sc = s[0]+s[2]+s[4]+s[5];
+  const sk = s[1]+s[3];
+  const op = sc+sk+s[6];
+  const f = n => n > 0 ? n.toLocaleString('ko-KR') : '';
+  document.getElementById('dr-tot-ibcash').textContent   = f(s[0]);
+  document.getElementById('dr-tot-ibcard').textContent   = f(s[1]);
+  document.getElementById('dr-tot-jbcash').textContent   = f(s[2]);
+  document.getElementById('dr-tot-jbcard').textContent   = f(s[3]);
+  document.getElementById('dr-tot-sije').textContent     = f(s[4]);
+  document.getElementById('dr-tot-bank').textContent     = f(s[5]);
+  document.getElementById('dr-tot-other').textContent    = f(s[6]);
+  document.getElementById('dr-tot-expense').textContent  = f(s[7]);
+  document.getElementById('dr-tot-pat').textContent      = s[8] || '';
+  document.getElementById('dr-tot-sonan').textContent    = s[9]  || '';
+  document.getElementById('dr-tot-coffee').textContent   = s[10] || '';
+  document.getElementById('dr-tot-umbrella').textContent = s[11] || '';
+  document.getElementById('dr-tot-fan').textContent      = s[12] || '';
+  document.getElementById('dr-tot-outpat').textContent   = f(op);
+  document.getElementById('dr-input-total-row').style.display = '';
+}
+
+function addDrRow(data) {
+  const tbody = document.getElementById('dr-input-tbody');
+  const monthVal = document.getElementById('dr-input-month').value;
+  const defaultDate = monthVal ? monthVal + '-01' : '';
+  const d = data || { date:defaultDate };
+
+  const td     = 'border:1px solid #D8D8D8;padding:1px 2px;vertical-align:middle;';
+  const inp    = 'border:none;outline:none;width:100%;font-family:inherit;font-size:12px;text-align:right;padding:5px 4px;background:transparent;';
+  const revTd  = 'border:1px solid #C8A8D8;padding:1px 2px;background:#F9F5FC;vertical-align:middle;';
+  const revInp = 'border:none;outline:none;width:100%;font-family:inherit;font-size:12px;text-align:center;padding:5px 3px;background:transparent;color:#6A1B9A;';
+  const autoTdBig = 'border:1px solid #1565C0;padding:5px 6px;text-align:right;font-size:12px;background:#BBDEFB;color:#0A3565;font-weight:800;vertical-align:middle;';
+
+  const onf  = `onfocus="this.select();this.style.background='#EBF5FB';" onblur="this.style.background='transparent';"`;
+  const revf = `onfocus="this.select();this.style.background='#EDE7FF';" onblur="this.style.background='transparent';"`;
+  const nav  = `onkeydown="if(event.key==='Enter'){event.preventDefault();drNextCell(this);}"`;
+  const ev   = `oninput="drCalcRow(this.closest('tr'))"`;
+
+  const tr = document.createElement('tr');
+  const rowIdx = tbody.children.length;
+  tr.style.background = rowIdx % 2 === 0 ? '#fff' : '#F7F9FC';
+
+  tr.innerHTML = `
+    <td style="${td}padding:2px 3px;">
+      <div style="display:flex;align-items:center;gap:3px;">
+        <input type="date" class="dr-cell dr-date" style="border:none;outline:none;font-family:inherit;font-size:11px;padding:5px 2px;background:transparent;width:103px;cursor:pointer;"
+          value="${d.date||''}"
+          onfocus="this.style.background='#EBF5FB';" onblur="this.style.background='transparent';"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();drNextCell(this);}"
+          oninput="drUpdateDateLabel(this.closest('tr'))"
+          onchange="drUpdateDateLabel(this.closest('tr'))">
+        <span class="dr-date-label" style="font-size:11px;font-weight:900;min-width:16px;"></span>
+      </div>
+    </td>
+    <td style="${td}"><input type="number" class="dr-cell" style="${inp}" value="${d.ibCash||''}" ${onf} ${nav} ${ev}></td>
+    <td style="${td}"><input type="number" class="dr-cell" style="${inp}color:#1565C0;" value="${d.ibCard||''}" ${onf} ${nav} ${ev}></td>
+    <td style="${td}"><input type="number" class="dr-cell" style="${inp}" value="${d.jbCash||''}" ${onf} ${nav} ${ev}></td>
+    <td style="${td}"><input type="number" class="dr-cell" style="${inp}color:#1565C0;" value="${d.jbCard||''}" ${onf} ${nav} ${ev}></td>
+    <td style="${td}"><input type="number" class="dr-cell" style="${inp}" value="${d.sije||''}" ${onf} ${nav} ${ev}></td>
+    <td style="${td}"><input type="number" class="dr-cell" style="${inp}" value="${d.bank||''}" ${onf} ${nav} ${ev}></td>
+    <td style="${td}"><input type="number" class="dr-cell" style="${inp}" value="${d.other||''}" ${onf} ${nav} ${ev}></td>
+    <td style="border:1px solid #C44A00;padding:1px 2px;background:#FFF8F5;vertical-align:middle;"><input type="number" class="dr-cell" style="${inp}color:#C44A00;" value="${d.expense||''}" onfocus="this.select();this.style.background='#FFE8D8';" onblur="this.style.background='transparent';" ${nav} ${ev}></td>
+    <td style="${td}"><input type="number" class="dr-cell" style="${inp}text-align:center;" value="${d.patCount||''}" ${onf} ${nav} ${ev}></td>
+    <td style="${revTd}"><input type="number" class="dr-cell" style="${revInp}" value="${d.sonan||''}" ${revf} ${nav} ${ev}></td>
+    <td style="${revTd}"><input type="number" class="dr-cell" style="${revInp}" value="${d.coffee||''}" ${revf} ${nav} ${ev}></td>
+    <td style="${revTd}"><input type="number" class="dr-cell" style="${revInp}" value="${d.umbrella||''}" ${revf} ${nav} ${ev}></td>
+    <td style="${revTd}"><input type="number" class="dr-cell" style="${revInp}" value="${d.fan||''}" ${revf} ${nav} ${ev}></td>
+    <td class="dr-auto-op" style="${autoTdBig}"></td>
+    <td style="${td}text-align:center;padding:2px;"><button onclick="this.closest('tr').remove();updateDrEmpty();drUpdateTotal();" class="btn-del-leave" style="font-size:11px;padding:3px 7px;">✕</button></td>
+  `;
+  tbody.appendChild(tr);
+  drUpdateDateLabel(tr);
+  if (d.ibCash || d.ibCard || d.jbCash || d.jbCard || d.sije || d.bank || d.other) drCalcRow(tr);
+  updateDrEmpty();
+}
+
+function updateDrEmpty() {
+  const tbody = document.getElementById('dr-input-tbody');
+  const isEmpty = tbody.children.length === 0;
+  document.getElementById('dr-input-empty').style.display = isEmpty ? 'block' : 'none';
+  if (isEmpty) document.getElementById('dr-input-total-row').style.display = 'none';
+}
+
+function saveDrData() {
+  const monthVal = document.getElementById('dr-input-month').value;
+  if (!monthVal) { showDrStatus('연월을 선택해주세요.', false); return; }
+  const [y, m] = monthVal.split('-');
+  const monthKey = `${y.slice(2)}.${m.padStart(2,'0')}`;
+  const label = `${y.slice(2)}년 ${parseInt(m)}월`;
+  const rows = collectDrRows();
+  if (rows.length === 0) { showDrStatus('입력된 데이터가 없습니다.', false); return; }
+  localStorage.setItem(DR_KEY + monthKey, JSON.stringify({ month:monthKey, label, rows }));
+  showDrStatus(`✓ ${label} 저장 완료 · 대시보드에 반영됨`, true);
+}
+
+function collectDrRows() {
+  const rows = [];
+  document.querySelectorAll('#dr-input-tbody tr').forEach(tr => {
+    const cells = Array.from(tr.querySelectorAll('input.dr-cell'));
+    const dateVal = cells[0] ? cells[0].value : '';
+    if (!dateVal) return;
+    rows.push([
+      dateVal,
+      parseInt(cells[1].value)||0,  // ibCash
+      parseInt(cells[2].value)||0,  // ibCard
+      parseInt(cells[3].value)||0,  // jbCash
+      parseInt(cells[4].value)||0,  // jbCard
+      parseInt(cells[5].value)||0,  // sije
+      parseInt(cells[6].value)||0,  // bank
+      parseInt(cells[7].value)||0,  // other
+      parseInt(cells[8].value)||0,  // expense
+      parseInt(cells[9].value)||0,  // patCount
+      parseInt(cells[10].value)||0, // sonan
+      parseInt(cells[11].value)||0, // coffee
+      parseInt(cells[12].value)||0, // umbrella
+      parseInt(cells[13].value)||0  // fan
+    ]);
+  });
+  return rows.sort((a, b) => a[0].localeCompare(b[0]));
+}
+
+function loadDrPrevious() {
+  const monthVal = document.getElementById('dr-input-month').value;
+  if (!monthVal) { showDrStatus('연월을 먼저 선택하세요.', false); return; }
+  const [y, m] = monthVal.split('-');
+  const monthKey = `${y.slice(2)}.${m.padStart(2,'0')}`;
+  const stored = localStorage.getItem(DR_KEY + monthKey);
+  if (!stored) { showDrStatus('저장된 데이터가 없습니다.', false); return; }
+  const data = JSON.parse(stored);
+  document.getElementById('dr-input-tbody').innerHTML = '';
+  document.getElementById('dr-input-total-row').style.display = 'none';
+  data.rows.forEach(r => addDrRow({
+    date:r[0], ibCash:r[1], ibCard:r[2], jbCash:r[3], jbCard:r[4],
+    sije:r[5], bank:r[6], other:r[7], expense:r[8], patCount:r[9], sonan:r[10], coffee:r[11],
+    umbrella:r[12], fan:r[13]
+  }));
+  showDrStatus('불러오기 완료', true);
+}
+
+function showDrStatus(msg, ok) {
+  const el = document.getElementById('dr-save-status');
+  el.textContent = msg;
+  el.className = 'save-status ' + (ok ? 'ok' : 'err');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.textContent = ''; }, 4000);
+}
+
+// ── 연차/OFF 시스템 ──
+const LEAVE_KEY = 'leadersos_leave_data';
+const LEAVE_STAFF = [
+  {name:'정영현',team:'팀장'},{name:'송다영',team:'간호'},{name:'임다빈',team:'간호'},
+  {name:'엄정희',team:'간호'},{name:'최문기',team:'방과'},{name:'양금하',team:'방과'},
+  {name:'김민겸',team:'PT'},{name:'이희원',team:'PT'},{name:'김택수',team:'PT'},
+  {name:'김세인',team:'PT'},{name:'황윤정',team:'이사님'}
+];
+const LV_DAYS = ['일','월','화','수','목','금','토'];
+
+function loadLeaveData() {
+  const raw = localStorage.getItem(LEAVE_KEY);
+  if (!raw) return {requests:[],settings:{closedDates:[],quota:{}}};
+  try { return JSON.parse(raw); } catch(e) { return {requests:[],settings:{closedDates:[],quota:{}}}; }
+}
+function saveLeaveData(d) { localStorage.setItem(LEAVE_KEY, JSON.stringify(d)); }
+
+function getMondayStr(ds) {
+  const d = new Date(ds + 'T00:00:00');
+  const day = d.getDay();
+  d.setDate(d.getDate() + (day === 0 ? -6 : 1 - day));
+  return d.toISOString().split('T')[0];
+}
+
+function initLeaveForm() {
+  const sel = document.getElementById('leave-name');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">-- 선택 --</option>' +
+    LEAVE_STAFF.map(s => `<option value="${s.name}">[${s.team}] ${s.name}</option>`).join('');
+  const today = new Date();
+  document.getElementById('leave-date').value = today.toISOString().split('T')[0];
+}
+
+function submitLeave(type) {
+  const name = document.getElementById('leave-name').value;
+  const dateStr = document.getElementById('leave-date').value;
+  if (!name) { showLeaveMsg('이름을 선택해주세요.', false); return; }
+  if (!dateStr) { showLeaveMsg('날짜를 선택해주세요.', false); return; }
+  const data = loadLeaveData();
+  const { requests, settings } = data;
+  if (settings.closedDates && settings.closedDates.includes(dateStr)) {
+    showLeaveMsg('해당 날짜는 신청이 불가합니다. (관리자 제한)', false); return;
+  }
+  if (requests.some(r => r.name === name && r.date === dateStr && r.type === type)) {
+    showLeaveMsg('동일한 날짜에 이미 같은 신청이 있습니다.', false); return;
+  }
+  if (type === 'off') {
+    const wk = getMondayStr(dateStr);
+    const ex = requests.filter(r => r.name === name && r.type === 'off' && getMondayStr(r.date) === wk);
+    if (ex.length >= 1) { showLeaveMsg('이번 주에 이미 OFF 신청이 있습니다. (' + ex[0].date + ')', false); return; }
+  } else {
+    const mk = dateStr.substring(0, 7);
+    const quota = (settings.quota && settings.quota[name]) || 1;
+    const used = requests.filter(r => r.name === name && r.type === 'annual' && r.date.startsWith(mk)).length;
+    if (used >= quota) { showLeaveMsg('이번 달 연차 한도(' + quota + '개)를 초과했습니다.', false); return; }
+  }
+  const staff = LEAVE_STAFF.find(s => s.name === name);
+  data.requests.push({
+    id: Date.now() + '_' + Math.random().toString(36).substr(2, 8),
+    name, team: staff ? staff.team : '', type, date: dateStr,
+    createdAt: new Date().toISOString(), note: ''
+  });
+  saveLeaveData(data);
+  showLeaveMsg('✓ ' + dateStr + ' ' + (type === 'annual' ? '연차' : 'OFF') + ' 신청 완료', true);
+  renderMyLeaveRequests();
+}
+
+function deleteMyLeave(id) {
+  const name = document.getElementById('leave-name').value;
+  const data = loadLeaveData();
+  const req = data.requests.find(r => r.id === id);
+  if (!req || req.name !== name) { showLeaveMsg('권한이 없습니다.', false); return; }
+  if (!confirm('이 신청을 취소하시겠습니까?')) return;
+  data.requests = data.requests.filter(r => r.id !== id);
+  saveLeaveData(data);
+  showLeaveMsg('신청이 취소되었습니다.', true);
+  renderMyLeaveRequests();
+}
+
+function renderMyLeaveRequests() {
+  const name = document.getElementById('leave-name').value;
+  const el = document.getElementById('leave-my-requests');
+  const noticeEl = document.getElementById('leave-quota-notice');
+  if (!el) return;
+  if (!name) { el.innerHTML = ''; if (noticeEl) noticeEl.textContent = ''; return; }
+  const data = loadLeaveData();
+  const myReqs = data.requests.filter(r => r.name === name).sort((a, b) => a.date.localeCompare(b.date));
+  if (noticeEl) {
+    const now = new Date();
+    const mk = now.toISOString().substring(0, 7);
+    const quota = (data.settings.quota && data.settings.quota[name]) || 1;
+    const usedA = myReqs.filter(r => r.type === 'annual' && r.date.startsWith(mk)).length;
+    const wk = getMondayStr(now.toISOString().split('T')[0]);
+    const usedO = myReqs.filter(r => r.type === 'off' && getMondayStr(r.date) === wk).length;
+    noticeEl.textContent = now.getFullYear() + '년 ' + (now.getMonth()+1) + '월 연차: ' + usedA + '/' + quota + '개 · 이번 주 OFF: ' + usedO + '/1회';
+  }
+  if (myReqs.length === 0) {
+    el.innerHTML = '<p style="color:#aaa;font-size:13px;text-align:center;padding:16px 0;">신청 내역이 없습니다.</p>';
+    return;
+  }
+  const grouped = {};
+  myReqs.forEach(r => { const m = r.date.substring(0, 7); if (!grouped[m]) grouped[m] = []; grouped[m].push(r); });
+  el.innerHTML = Object.entries(grouped).sort().map(function([month, reqs]) {
+    const parts = month.split('-');
+    return '<div style="margin-bottom:14px;">' +
+      '<div style="font-size:12px;font-weight:800;color:var(--text-mid);margin-bottom:8px;">' +
+        parts[0] + '년 ' + parseInt(parts[1]) + '월' +
+        '<span style="font-size:11px;font-weight:400;margin-left:8px;">연차 ' + reqs.filter(r=>r.type==='annual').length + '개 · OFF ' + reqs.filter(r=>r.type==='off').length + '개</span>' +
+      '</div>' +
+      reqs.map(r =>
+        '<div class="leave-item">' +
+          '<div class="leave-item-date">' + r.date + ' (' + LV_DAYS[new Date(r.date+'T00:00:00').getDay()] + ')</div>' +
+          '<span class="leave-tag-lv ' + r.type + '">' + (r.type === 'annual' ? '연차' : 'OFF') + '</span>' +
+          '<div style="flex:1;"></div>' +
+          '<button class="btn-del-leave" onclick="deleteMyLeave(\'' + r.id + '\')">취소</button>' +
+        '</div>'
+      ).join('') +
+    '</div>';
+  }).join('');
+}
+
+function showLeaveMsg(msg, ok) {
+  const el = document.getElementById('leave-status-msg');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.color = ok ? 'var(--green)' : 'var(--orange)';
+  clearTimeout(el._t);
+  el._t = setTimeout(function() { el.textContent = ''; }, 4000);
+}
+
+// ══════════════════════════════════════════
+// 간호 리뷰 입력
+// ══════════════════════════════════════════
+const RV_INP_KEY = 'leadersos_reviews_';
+const RV_INP_NURSES = ['정영현', '송다영', '임다빈', '노희원'];
+let rvDay = 1, rvMonth = '', rvData = {};
+
+function initReviewTab() {
+  const now = new Date();
+  rvMonth = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  rvDay = now.getDate();
+  const el = document.getElementById('review-month');
+  if (el) el.value = rvMonth;
+  _buildRvInputs();
+  _loadRvFromStorage();
+  _renderRvDay();
+  _renderRvSummary();
+}
+
+function _buildRvInputs() {
+  const inputsDiv = document.getElementById('review-nurse-inputs');
+  if (!inputsDiv) return;
+  inputsDiv.innerHTML = RV_INP_NURSES.map(name =>
+    `<div style="display:flex;align-items:center;gap:10px;">
+      <div style="min-width:56px;font-size:13px;font-weight:800;color:var(--green-dark);">${name}</div>
+      <input type="text" id="rv-inp-${name}"
+        placeholder="환자명 쉼표 구분  예) 홍길동, 김철수"
+        style="flex:1;border:1px solid #C6E8D4;border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;"
+        oninput="rvAutoCount('${name}')">
+      <span id="rv-cnt-${name}" style="min-width:34px;font-size:12px;color:var(--green);font-weight:700;text-align:right;"></span>
+    </div>`
+  ).join('');
+
+  const thead = document.getElementById('review-summary-head');
+  if (thead) thead.innerHTML = `<tr style="background:#EBF5FB;">
+    <th style="padding:8px 12px;border-bottom:2px solid #C6E8D4;text-align:center;font-size:13px;">날짜</th>
+    ${RV_INP_NURSES.map(n=>`<th style="padding:8px 12px;border-bottom:2px solid #C6E8D4;text-align:center;font-size:13px;">${n}</th>`).join('')}
+    <th style="padding:8px 12px;border-bottom:2px solid #C6E8D4;text-align:center;font-size:13px;">합계</th>
+  </tr>`;
+}
+
+function rvAutoCount(name) {
+  const el = document.getElementById('rv-inp-' + name);
+  const cnt = el && el.value ? el.value.split(',').map(function(s){return s.trim();}).filter(function(s){return s;}).length : 0;
+  const cntEl = document.getElementById('rv-cnt-' + name);
+  if (cntEl) cntEl.textContent = cnt > 0 ? cnt + '명' : '';
+}
+
+function loadReviewData() {
+  const el = document.getElementById('review-month');
+  if (!el || !el.value) return;
+  rvMonth = el.value;
+  _loadRvFromStorage();
+  _renderRvDay();
+  _renderRvSummary();
+}
+
+function _loadRvFromStorage() {
+  if (!rvMonth) return;
+  const parts = rvMonth.split('-');
+  const key = RV_INP_KEY + parts[0].slice(2) + '.' + parts[1];
+  const raw = localStorage.getItem(key);
+  rvData = raw ? (JSON.parse(raw).data || {}) : {};
+}
+
+function _saveRvCurrentDay() {
+  const day = String(rvDay);
+  const entry = {};
+  let hasData = false;
+  RV_INP_NURSES.forEach(function(name) {
+    const el = document.getElementById('rv-inp-' + name);
+    const val = el ? el.value.trim() : '';
+    entry[name] = val;
+    if (val) hasData = true;
+  });
+  if (hasData) { rvData[day] = entry; } else { delete rvData[day]; }
+}
+
+function reviewNavigateDay(delta) {
+  _saveRvCurrentDay();
+  const parts = rvMonth.split('-');
+  const daysInMonth = new Date(parseInt(parts[0]), parseInt(parts[1]), 0).getDate();
+  rvDay = Math.max(1, Math.min(daysInMonth, rvDay + delta));
+  _renderRvDay();
+}
+
+function _renderRvDay() {
+  if (!rvMonth) return;
+  const parts = rvMonth.split('-');
+  const daysInMonth = new Date(parseInt(parts[0]), parseInt(parts[1]), 0).getDate();
+  const date = new Date(parseInt(parts[0]), parseInt(parts[1])-1, rvDay);
+  const wd = ['일','월','화','수','목','금','토'][date.getDay()];
+  const lbl = document.getElementById('review-day-label');
+  if (lbl) lbl.textContent = rvDay + '일 (' + wd + ')';
+  const prevBtn = document.getElementById('review-prev-day');
+  const nextBtn = document.getElementById('review-next-day');
+  if (prevBtn) prevBtn.disabled = (rvDay <= 1);
+  if (nextBtn) nextBtn.disabled = (rvDay >= daysInMonth);
+  const dayData = rvData[String(rvDay)] || {};
+  RV_INP_NURSES.forEach(function(name) {
+    const el = document.getElementById('rv-inp-' + name);
+    if (el) { el.value = dayData[name] || ''; rvAutoCount(name); }
+  });
+}
+
+function saveReviewData() {
+  _saveRvCurrentDay();
+  if (!rvMonth) return;
+  const parts = rvMonth.split('-');
+  const key = RV_INP_KEY + parts[0].slice(2) + '.' + parts[1];
+  localStorage.setItem(key, JSON.stringify({ month: parts[0].slice(2)+'.'+parts[1], data: rvData }));
+  _renderRvSummary();
+  showReviewStatus('저장 완료', true);
+}
+
+function _renderRvSummary() {
+  if (!rvMonth) return;
+  const parts = rvMonth.split('-');
+  const daysInMonth = new Date(parseInt(parts[0]), parseInt(parts[1]), 0).getDate();
+  const totals = {};
+  RV_INP_NURSES.forEach(function(n){totals[n]=0;});
+  let grandTotal = 0, rows = '';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dayData = rvData[String(d)];
+    if (!dayData) continue;
+    let rowTotal = 0;
+    const cells = RV_INP_NURSES.map(function(name) {
+      const raw = dayData[name] || '';
+      const cnt = raw ? raw.split(',').map(function(s){return s.trim();}).filter(function(s){return s;}).length : 0;
+      totals[name] += cnt;
+      rowTotal += cnt;
+      return `<td style="text-align:center;padding:6px 10px;border-bottom:1px solid #EEF5F1;cursor:${cnt?'help':'default'};" title="${raw}">${cnt||''}</td>`;
+    }).join('');
+    if (rowTotal > 0) {
+      grandTotal += rowTotal;
+      rows += `<tr><td style="text-align:center;padding:6px 10px;border-bottom:1px solid #EEF5F1;font-weight:700;">${d}</td>${cells}<td style="text-align:center;padding:6px 10px;border-bottom:1px solid #EEF5F1;font-weight:700;">${rowTotal}</td></tr>`;
+    }
+  }
+  if (!rows) rows = `<tr><td colspan="${RV_INP_NURSES.length+2}" style="text-align:center;color:#aaa;padding:20px 0;">입력된 데이터가 없습니다.</td></tr>`;
+  const totRow = `<tr style="background:#EBF5FB;font-weight:800;">
+    <td style="text-align:center;padding:8px 10px;">합계</td>
+    ${RV_INP_NURSES.map(function(n){return `<td style="text-align:center;padding:8px 10px;">${totals[n]||''}</td>`;}).join('')}
+    <td style="text-align:center;padding:8px 10px;">${grandTotal||''}</td>
+  </tr>`;
+  const tbody = document.getElementById('review-summary-body');
+  if (tbody) tbody.innerHTML = rows + totRow;
+}
+
+function showReviewStatus(msg, ok) {
+  const el = document.getElementById('review-save-status');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.color = ok ? 'var(--green)' : 'var(--orange)';
+  clearTimeout(el._t);
+  el._t = setTimeout(function(){el.textContent='';}, 3500);
+}
+</script>
+</body>
+</html>
